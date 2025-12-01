@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int main() {
+void part1() {
     ifstream input{"input/01"};
 
     int dial     = 50;
@@ -25,4 +25,36 @@ int main() {
     }
 
     println("{}", password);
+}
+
+void part2() {
+    ifstream input{"input/01"};
+
+    int dial     = 50;
+    int distance = 0;
+    int password = 0;
+    for (string line; getline(input, line);) {
+        from_chars(line.data() + 1, line.data() + line.length(), distance);
+        password += distance / 100;
+        distance %= 100;
+        // println("{},{},{}", password, distance, dial);
+        if (line[0] == 'L') {
+            if (dial != 0 && distance >= dial) {
+                ++password;
+            }
+
+            dial = (dial + 100 - distance) % 100;
+        } else {
+            if (dial != 0 && distance >= (100 - dial)) {
+                ++password;
+            }
+            dial = (dial + distance) % 100;
+        }
+    }
+    println("{}", password);
+}
+
+int main() {
+    part1();
+    part2();
 }
