@@ -4,3 +4,4 @@ project(aoc2025 VERSION 0.1.0 LANGUAGES  CXX)
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(day01 01.cpp)
+add_executable(day02 02.cpp)
