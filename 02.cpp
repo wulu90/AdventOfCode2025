@@ -31,11 +31,14 @@ bool is_valid_part2(int64_t id) {
     }
 
     bool valid{false};
-    int64_t div = 10;
     for (int i = 1; i <= len / 2; ++i) {
         if (len % i != 0) {
-            div *= 10;
             continue;
+        }
+
+        int64_t div = 1;
+        for (int n = 1; n <= i; ++n) {
+            div *= 10;
         }
 
         tmp         = id;
@@ -55,8 +58,6 @@ bool is_valid_part2(int64_t id) {
             valid = true;
             break;
         }
-
-        div *= 10;
     }
 
     return valid;
