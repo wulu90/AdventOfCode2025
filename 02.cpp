@@ -22,10 +22,51 @@ bool is_valid(int64_t id) {
     return false;
 }
 
+bool is_valid_part2(int64_t id) {
+    int64_t tmp = id;
+    int len     = 0;
+    while (tmp) {
+        ++len;
+        tmp /= 10;
+    }
+
+    bool valid{false};
+    int64_t div = 10;
+    for (int i = 1; i <= len / 2; ++i) {
+        if (len % i != 0) {
+            div *= 10;
+            continue;
+        }
+
+        tmp         = id;
+        int64_t seq = tmp % div;
+        tmp /= div;
+
+        bool repeat = true;
+        for (int j = 1; j < len / i; ++j) {
+            if (seq != tmp % div) {
+                repeat = false;
+                break;
+            }
+            tmp /= div;
+        }
+
+        if (repeat) {
+            valid = true;
+            break;
+        }
+
+        div *= 10;
+    }
+
+    return valid;
+}
+
 void part1() {
     ifstream input{"input/02"};
 
-    int64_t res = 0;
+    int64_t res   = 0;
+    int64_t res_2 = 0;
     for (string line; getline(input, line, ',');) {
         auto dash_pos = line.find('-');
         int64_t first, last;
@@ -35,10 +76,14 @@ void part1() {
             if (is_valid(i)) {
                 res += i;
             }
+            if (is_valid_part2(i)) {
+                res_2 += i;
+            }
         }
     }
 
     println("{}", res);
+    println("{}", res_2);
 }
 
 int main() {
