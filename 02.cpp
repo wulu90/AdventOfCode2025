@@ -16,10 +16,8 @@ bool is_valid(int64_t id) {
     for (int i = 0; i < len / 2; ++i) {
         divider *= 10;
     }
-    if (len % 2 == 0) {
-        return id / divider == id % divider;
-    }
-    return false;
+
+    return len % 2 == 0 && id / divider == id % divider;
 }
 
 bool is_valid_part2(int64_t id) {
