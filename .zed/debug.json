@@ -1,0 +1,18 @@
+// Project-local debug tasks
+//
+// For more documentation on how to configure debug tasks,
+// see: https://zed.dev/docs/debugger
+[
+  {
+    "label": "Debug",
+    "build": {
+      "command": "cmake",
+      "args": ["--build", "--preset x64_debug"],
+      "cwd": "$ZED_WORKTREE_ROOT"
+    },
+    "program": "$ZED_WORKTREE_ROOT/build/day$ZED_STEM",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "adapter": "GDB",
+    "request": "launch"
+  }
+]
