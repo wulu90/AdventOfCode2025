@@ -30,6 +30,25 @@ void part1() {
     }
 
     println("{}", res);
+
+    sort(id_rangs.begin(), id_rangs.end());
+
+    int64_t check_first = id_rangs.front().first;
+    int64_t check_last  = id_rangs.front().second;
+    int64_t id_count    = check_last - check_first + 1;
+    for (auto [i, j] : id_rangs) {
+        if (j > check_last) {
+            if (i <= check_last) {
+                id_count += j - check_last;
+            } else {
+                id_count += j - i + 1;
+            }
+
+            check_last = j;
+        }
+    }
+
+    println("{}", id_count);
 }
 
 int main() {
