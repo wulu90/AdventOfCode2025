@@ -33,18 +33,17 @@ void part1() {
 
     sort(id_rangs.begin(), id_rangs.end());
 
-    int64_t check_first = id_rangs.front().first;
-    int64_t check_last  = id_rangs.front().second;
-    int64_t id_count    = check_last - check_first + 1;
+    int64_t id_count  = id_rangs.front().second - id_rangs.front().first + 1;
+    int64_t range_max = id_rangs.front().second;
     for (auto [i, j] : id_rangs) {
-        if (j > check_last) {
-            if (i <= check_last) {
-                id_count += j - check_last;
+        if (j > range_max) {
+            if (i <= range_max) {
+                id_count += j - range_max;
             } else {
                 id_count += j - i + 1;
             }
 
-            check_last = j;
+            range_max = j;
         }
     }
 
