@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <functional>
 #include <print>
@@ -44,6 +45,48 @@ void part1() {
     println("{}", res);
 }
 
+void part2() {
+    fstream input{"input/06"};
+
+    vector<string> worksheet;
+    for (string line; getline(input, line);) {
+        worksheet.push_back(line);
+    }
+
+    int64_t res = 0;
+    vector<int64_t> num_vec;
+    function<int64_t(int64_t, int64_t)> func;
+    bool all_space = true;
+
+    for (size_t i = worksheet.front().size() - 1; i < worksheet.front().size(); --i) {
+        all_space   = true;
+        int64_t num = 0;
+        for (size_t j = 0; j < worksheet.size(); ++j) {
+            if (isdigit(worksheet[j][i])) {
+                num       = num * 10 + (worksheet[j][i] - '0');
+                all_space = false;
+            } else if (worksheet[j][i] == '+') {
+                func      = plus{};
+                all_space = false;
+            } else if (worksheet[j][i] == '*') {
+                func      = multiplies<>{};
+                all_space = false;
+            }
+        }
+        if (!all_space) {
+            num_vec.push_back(num);
+        }
+
+        if (all_space || i == 0) {
+            res += ranges::fold_left_first(num_vec, func).value();
+            num_vec.clear();
+        }
+    }
+
+    println("{}", res);
+}
+
 int main() {
     part1();
+    part2();
 }
