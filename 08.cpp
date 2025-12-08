@@ -104,11 +104,11 @@ void part1() {
     println("{}", group_id_count[0] * group_id_count[1] * group_id_count[2]);
 
     // part2
-    for (auto& gid : junction_box_group_id) {
-        gid = numeric_limits<size_t>::max();
-    }
-    group_id_next = 0;
-    for (auto [_, p] : distance_indexes) {
+    // for (auto& gid : junction_box_group_id) {
+    //    gid = numeric_limits<size_t>::max();
+    // }
+    // group_id_next = 0;
+    for (auto [_, p] : distance_indexes | ranges::views::drop(1000)) {
         auto [i, j] = p;
         if (junction_box_group_id[i] == numeric_limits<size_t>::max() && junction_box_group_id[j] == numeric_limits<size_t>::max()) {
             junction_box_group_id[i] = group_id_next;
