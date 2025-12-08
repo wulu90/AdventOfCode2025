@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <functional>
 #include <limits>
@@ -101,6 +102,39 @@ void part1() {
 
     sort(group_id_count.begin(), group_id_count.end(), greater<>());
     println("{}", group_id_count[0] * group_id_count[1] * group_id_count[2]);
+
+    // part2
+    for (auto& gid : junction_box_group_id) {
+        gid = numeric_limits<size_t>::max();
+    }
+    group_id_next = 0;
+    for (auto [_, p] : distance_indexes) {
+        auto [i, j] = p;
+        if (junction_box_group_id[i] == numeric_limits<size_t>::max() && junction_box_group_id[j] == numeric_limits<size_t>::max()) {
+            junction_box_group_id[i] = group_id_next;
+            junction_box_group_id[j] = group_id_next;
+            ++group_id_next;
+        } else if (junction_box_group_id[i] != numeric_limits<size_t>::max() && junction_box_group_id[j] == numeric_limits<size_t>::max()) {
+            junction_box_group_id[j] = junction_box_group_id[i];
+        } else if (junction_box_group_id[i] == numeric_limits<size_t>::max() && junction_box_group_id[j] != numeric_limits<size_t>::max()) {
+            junction_box_group_id[i] = junction_box_group_id[j];
+        } else {
+            if (junction_box_group_id[i] != junction_box_group_id[j]) {
+                auto id_i = junction_box_group_id[i];
+                auto id_j = junction_box_group_id[j];
+                for (auto& id : junction_box_group_id) {
+                    if (id == id_j) {
+                        id = id_i;
+                    }
+                }
+            }
+        }
+
+        if (all_of(junction_box_group_id.begin(), junction_box_group_id.end(), [&](auto& p) { return p == junction_box_group_id[0]; })) {
+            println("{}", get<0>(junction_boxes[i]) * get<0>(junction_boxes[j]));
+            break;
+        }
+    }
 }
 
 int main() {
