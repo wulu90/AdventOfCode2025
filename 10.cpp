@@ -148,9 +148,17 @@ void solve() {
         while (s.check() == z3::sat) {
             auto m = s.get_model();
 
+            /*  输出当前解
+            for (size_t i = 0; i < t.size(); ++i) {
+                print("{},", m.eval(t[i]).as_int64());
+            }
+            print("sum {}; ", m.eval(sum(t)).as_int64());
+            */
+
             press_min = min(press_min, m.eval(sum(t)).as_int64());
 
             // 阻止下次求解得到相同的值
+            // 变量不等于当前解的值，所有不等式以 or 连接，新 expr 为真则是新的解
             z3::expr_vector ev(c);
             for (size_t i = 0; i < m.size(); ++i) {
                 ev.push_back(m[i]() != m.get_const_interp(m[i]));
@@ -158,7 +166,7 @@ void solve() {
             s.add(z3::mk_or(ev));
         }
 
-        // println("{}", press_min);
+        // println("min {}", press_min);
         press_min_sum += press_min;
     }
 
