@@ -1,11 +1,15 @@
+#include <algorithm>
 #include <charconv>
 #include <fstream>
+#include <limits>
 #include <print>
 #include <queue>
 #include <ranges>
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include "z3++.h"
 
 using namespace std;
 using namespace std::ranges::views;
@@ -105,6 +109,60 @@ void solve() {
     }
 
     println("{}", fewest_presses);
+
+    int64_t press_min_sum = 0;
+    for (auto& machine : machine_vec) {
+        z3::context c;
+        z3::expr_vector t(c);
+        z3::solver s(c);
+
+        for (size_t i = 0; i < machine.button_wiring_schematics.size(); ++i) {
+            string name = "t"s + to_string(i);
+            t.push_back(c.int_const(name.c_str()));
+            s.add(t[i] >= 0);
+        }
+
+        for (size_t i = 0; i < machine.joltage_requirements.size(); ++i) {
+            vector<size_t> vi;
+            for (size_t j = 0; j < machine.button_wiring_schematics.size(); ++j) {
+                if (std::find(machine.button_wiring_schematics[j].begin(), machine.button_wiring_schematics[j].end(), i) !=
+                    machine.button_wiring_schematics[j].end()) {
+                    vi.push_back(j);
+                }
+            }
+
+            if (vi.empty()) {
+                continue;
+            }
+
+            auto e = t[vi[0]];
+            for (auto k : vi | views::drop(1)) {
+                e = e + t[k];
+            }
+            s.add(e == machine.joltage_requirements[i]);
+        }
+
+        int64_t press_min = numeric_limits<int64_t>::max();
+
+        // 找到所有可能的解
+        while (s.check() == z3::sat) {
+            auto m = s.get_model();
+
+            press_min = min(press_min, m.eval(sum(t)).as_int64());
+
+            // 阻止下次求解得到相同的值
+            z3::expr_vector ev(c);
+            for (size_t i = 0; i < m.size(); ++i) {
+                ev.push_back(m[i]() != m.get_const_interp(m[i]));
+            }
+            s.add(z3::mk_or(ev));
+        }
+
+        // println("{}", press_min);
+        press_min_sum += press_min;
+    }
+
+    println("{}", press_min_sum);
 }
 
 int main() {
