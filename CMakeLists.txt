@@ -17,6 +17,7 @@ add_executable(day09 09.cpp)
 add_executable(day10 10.cpp)
 find_package(Z3 REQUIRED CONFIG)
 target_include_directories(day10 PRIVATE ${Z3_CXX_INCLUDE_DIRS})
-target_include_directories(day10 PRIVATE ${Z3_CXX_INCLUDE_DIRS})
 target_link_libraries(day10 PRIVATE ${Z3_LIBRARIES})
 target_compile_options(day10 PRIVATE ${Z3_COMPONENT_CXX_FLAGS})
+
+add_executable(day11 11.cpp)
