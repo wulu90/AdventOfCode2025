@@ -21,3 +21,4 @@ target_link_libraries(day10 PRIVATE ${Z3_LIBRARIES})
 target_compile_options(day10 PRIVATE ${Z3_COMPONENT_CXX_FLAGS})
 
 add_executable(day11 11.cpp)
+add_executable(day12 12.cpp)
