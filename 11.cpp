@@ -133,10 +133,7 @@ void part2() {
         map<tuple<string_view, bool, bool>, size_t> tmpmap;
         for (auto& [k, v] : node_count) {
             auto [curr, fft, dac] = k;
-            if (curr == "out"sv) {
-                tmpmap[k] += v;
-                continue;
-            }
+
             if (matrix.contains(curr)) {
                 for (auto next : matrix[curr]) {
                     if (next == "fft"sv) {
@@ -147,21 +144,17 @@ void part2() {
                         tmpmap[{next, fft, dac}] += v;
                     }
                 }
+            } else {
+                tmpmap[k] += v;
             }
         }
-        // println("{}", tmpmap);
-        node_count   = std::move(tmpmap);
-        bool all_out = true;
-        for (auto& [k, v] : node_count) {
-            auto [curr, fft, dac] = k;
-            if (curr != "out"sv) {
-                all_out = false;
-                break;
-            }
-        }
-        if (all_out) {
+
+        if (node_count == tmpmap) {
             break;
         }
+
+        // println("{}", tmpmap);
+        node_count = std::move(tmpmap);
     }
     println("{}", node_count[{"out"sv, true, true}]);
 }
